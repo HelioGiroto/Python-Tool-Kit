@@ -1,0 +1,6 @@
+COMO INSTALAR MODULOS IMPOSSÍVEIS NO LINUX:
+
+$ sudo su
+# pip3 install nome_do_módulo...
+# exit
+
