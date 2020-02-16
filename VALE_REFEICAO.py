@@ -51,7 +51,7 @@ while(nome_funcionario != "FIM"):
 	funcionario = [''] *32
 	funcionario[0] = nome_funcionario
 
-	# pede dias que almoçou.
+	# pede dias que almoçou. Não precisa os dias estarem na ordem numérica.
 	print("DIGITE OS DIAS QUE ELE ALMOÇOU (separados por espaço):")
 	dados = input()
 	listaDados = dados.split(" ")
@@ -103,5 +103,4 @@ sheet['I33'] = "=SUM(B33:H33)"
 
 # salva o arquivo:
 wb.save(nome_mes + "-valeRefeicao.xlsx") 
-
 
