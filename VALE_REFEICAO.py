@@ -5,6 +5,7 @@
 
 # ESTE SCRIPT É PARA FORMAR UMA PLANILHA DO MÊS REFERENTE AO VALE REFEIÇÃO DOS FUNCIONÁRIOS DE UMA EMPRESA:
 
+print()
 # pede nome do mes
 print('DIGITE O NOME DO MÊS: ')
 nome_mes = input()
@@ -14,6 +15,7 @@ print()
 # pede preço do almoço (12.00)
 print('QUAL O PREÇO DO ALMOÇO: ')
 preco = input()
+preco = preco.replace(',', '.')
 
 # cria uma lista para mes
 mes = []
@@ -39,7 +41,7 @@ while(nome_funcionario != "FIM"):
 	# pede nome do funcionario
 	print("********************************")
 	print('NOME DO FUNCIONÁRIO:')
-	print("(Se quer encerrar, digite: FIM)")
+	print("(Para encerrar, digite: FIM)")
 	nome_funcionario = input()
 	# passa valor do input para tudo maiúsculo
 	nome_funcionario = nome_funcionario.upper()
@@ -52,18 +54,17 @@ while(nome_funcionario != "FIM"):
 	funcionario[0] = nome_funcionario
 
 	# pede dias que almoçou. Não precisa os dias estarem na ordem numérica.
-	print("DIGITE OS DIAS QUE ELE ALMOÇOU (separados por espaço):")
+	print("QUAIS DIAS ELE ALMOÇOU (separados por espaço):")
 	dados = input()
 	listaDados = dados.split(" ")
 	# passa para a lista funcionario o preço dentro do dia: funcionario[dia] = preço
 	for item in listaDados:
-		funcionario[ int(item) ] = int(preco)
+		funcionario[ int(item) ] = float(preco)
 
 	# appenda lista funcionario dentro da lista mes: mes.append(funcionario)
 	mes.append(funcionario)
 
-print(mes)
-
+#print(mes)
 
 ########################################################################
 
@@ -103,4 +104,7 @@ sheet['I33'] = "=SUM(B33:H33)"
 
 # salva o arquivo:
 wb.save(nome_mes + "-valeRefeicao.xlsx") 
+
+print("Planilha salva: " + nome_mes + "-valeRefeicao.xlsx")
+print()
 
