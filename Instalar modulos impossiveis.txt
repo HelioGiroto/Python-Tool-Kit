@@ -4,3 +4,8 @@ $ sudo su
 # pip3 install nome_do_módulo...
 # exit
 
+
+# ou 
+
+
+/usr/bin/python3 -m pip install -U pylint --user
