@@ -2,6 +2,7 @@
 #!/usr/bin/env python3
 # coding: utf-8
 # Author: Helio Giroto
+# Date: 15/02/2020
 
 # ESTE SCRIPT É PARA FORMAR UMA PLANILHA DO MÊS REFERENTE AO ABASTECIMENTO DE VEÍCULOS DE UMA EMPRESA:
 
@@ -43,7 +44,7 @@ while(placa_carro != "FIM"):
 	print('PLACA DO CARRO (Ao terminar digite: FIM): ', end='')
 	placa_carro = input()
 	# passa valor do input para tudo maiúsculo
-	placa_carro = placa_carro.upper()
+	placa_carro = placa_carro.upper().replace(' ','')
 	print()
 
 	if placa_carro == "FIM":
@@ -59,14 +60,14 @@ while(placa_carro != "FIM"):
 		# pede dias que almoçou.
 		print("DIA (ou: 'FIM'): ", end='')
 		dia = input()
-		dia = dia.upper()
+		dia = dia.upper().replace(' ', '')
 		# passa para a lista carro o preço dentro do dia: carro[dia] = preço
 		if dia == "FIM":
 			break
 		# pede preço do almoço (12.00)
 		print('VALOR R$       : ', end='')
 		valor = input()
-		valor = valor.replace(',', '.')
+		valor = valor.replace(',', '.').replace(' ', '')
 		print()
 		carro[int(dia)] = float(valor)
 
@@ -115,5 +116,4 @@ sheet['I33'] = "=SUM(B33:H33)"
 
 # salva o arquivo:
 wb.save(nome_mes + "-abastecimento.xlsx") 
-
 
