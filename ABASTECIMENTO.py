@@ -36,7 +36,7 @@ mes.append(cabecalho)
 
 # enquanto resposta for diferente de FIM:
 placa_carro = ''
-while(placa_carro != "FIM"):
+while True:
 	# pede nome do carro
 	print()
 	print()
