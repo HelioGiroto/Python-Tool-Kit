@@ -15,7 +15,7 @@ print()
 # pede preço do almoço (12.00)
 print('QUAL O PREÇO DO ALMOÇO: ')
 preco = input()
-preco = preco.replace(',', '.')
+preco = preco.replace(',', '.').replace(' ','')
 
 # cria uma lista para mes
 mes = []
@@ -36,7 +36,7 @@ mes.append(cabecalho)
 
 # enquanto resposta for diferente de FIM:
 nome_funcionario = ''
-while(nome_funcionario != "FIM"):
+while True:
 	print()
 	# pede nome do funcionario
 	print("********************************")
@@ -44,7 +44,7 @@ while(nome_funcionario != "FIM"):
 	print("(Para encerrar, digite: FIM)")
 	nome_funcionario = input()
 	# passa valor do input para tudo maiúsculo
-	nome_funcionario = nome_funcionario.upper()
+	nome_funcionario = nome_funcionario.upper().strip(' ')
 	print()
 	if nome_funcionario == "FIM":
 		break
@@ -56,6 +56,7 @@ while(nome_funcionario != "FIM"):
 	# pede dias que almoçou. Não precisa os dias estarem na ordem numérica.
 	print("QUAIS DIAS ELE ALMOÇOU (separados por espaço):")
 	dados = input()
+	dados = dados.strip(' ')
 	listaDados = dados.split(" ")
 	# passa para a lista funcionario o preço dentro do dia: funcionario[dia] = preço
 	for item in listaDados:
@@ -107,4 +108,5 @@ wb.save(nome_mes + "-valeRefeicao.xlsx")
 
 print("Planilha salva: " + nome_mes + "-valeRefeicao.xlsx")
 print()
+
 
