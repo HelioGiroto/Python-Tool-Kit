@@ -41,7 +41,7 @@ def mudaNome(nro):
 	return nro
 
 
-listaDados = [['DATA', 'NOME', 'SERVIÇO', 'VALOR']]
+listaDados = [['DATA', 'NOME', 'SERVIÇO', 'VALOR']] 
 
 def lancaDados():
 	while True:
@@ -106,7 +106,7 @@ def lancaDados():
 		else:
 			print(data)
 			listaDados.append(dadosServico)
-			os.system('clear')
+			os.system('clear') # opcional
 			# windows:
 			# os.system('cls')
 	print()
