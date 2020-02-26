@@ -12,13 +12,15 @@ import openpyxl as op
 import datetime, os
 
 
-def processa(novas_notas):
+def processa(novas_notas, planilha):
 
 	# abre arquivo (w-book) de planilha:
 	wb = op.load_workbook('avaliacao.xlsx')
-	# Abre planilha (w-sheet) - aba: (podendo ser escolha do usuário)
-	ws = wb.get_sheet_by_name('AUTOESCOLA')
 
+	# Abre planilha (w-sheet) - aba: (podendo ser escolha do usuário)
+	# ws = wb.get_sheet_by_name('AUTOESCOLA')
+	ws = wb.get_sheet_by_name(planilha)
+	
 	# first_row = list(ws.rows)[0][0] # pega dados de coluna infinita....
 	# print(first_row)
 
@@ -84,7 +86,12 @@ def processa(novas_notas):
 
 	# O nro da ultima linha aumentou conforme foi appendando, por isso, se requer atualizar variável:
 	nro_ult_linha = ws.max_row
-
+	'''	
+	L = ws.max_row
+	
+	for C in range(1, 32):
+		ws.cell(row=L, column=C).value = '=(SUM(A3:A'+str(nro_ult_linha)+'))/(ROWS(A3:A'+str(nro_ult_linha)+')*2)*100'
+	'''
 
 	# =(SOMA(A3:A34))/(LINHAS(A3:A34)*2)*100
 	tot_A = '=(SUM(A3:A'+str(nro_ult_linha)+'))/(ROWS(A3:A'+str(nro_ult_linha)+')*2)*100'
@@ -149,12 +156,12 @@ def processa(novas_notas):
 
 def lancaDadosDespachante():
 	print()
-
-def lancaDadosAutoescola():
+	print('AVALIAÇÃO DE SERVIÇOS DE DESPACHANTE')
+	print('------------------------------------')
 	while True:
 		print('Data: ', end='')
 		try:		
-			data = input()
+			data = input().strip()
 			data = data.replace('-','/')
 			data = datetime.datetime.strptime(data, '%d/%m/%Y')
 		except:
@@ -167,7 +174,7 @@ def lancaDadosAutoescola():
 				
 		print()
 		print('Nro da Pesquisa: ', end='')
-		nro_pesquisa = input()
+		nro_pesquisa = input().strip()
 		print()
 
 		print('**********************')
@@ -180,7 +187,111 @@ def lancaDadosAutoescola():
 
 
 		print('Digite a sequência de valores separados por espaço.')
-		sequenciaC = input().split(' ')
+		sequenciaC = input().strip().split(' ')[:16]
+		print()
+		print('\tLimpeza        : ', sequenciaC[0])		
+		print('\tInfraestrutura : ', sequenciaC[1])
+		print('\tInformações    : ', sequenciaC[2])
+		print('\tHorário        : ', sequenciaC[3])
+		print('\tPreço          : ', sequenciaC[4])
+		print('\tCondições      : ', sequenciaC[5])
+		print('\tAtendimento    : ', sequenciaC[6])
+		print('\tOrientações    : ', sequenciaC[7])
+		print('\tTratado        : ', sequenciaC[8])
+		print('\tAgilidade      : ', sequenciaC[9])
+		print('\tQualidade      : ', sequenciaC[10])
+		print('\tPrazo          : ', sequenciaC[11])
+		print('\tBrindes        : ', sequenciaC[12])
+		print('\tSorteio        : ', sequenciaC[13])
+		print('\tAvaliação      : ', sequenciaC[14])
+		print('\tRecomenda      : ', sequenciaC[15])
+		print()
+		print('Confirma?\t(S)im\t(N)ão: ', end='')
+		confirma = input()
+		if confirma == 'n' or confirma == 'N':
+			print()
+			lancaDadosAutoescola()
+
+		print()
+		print('***********************')
+		print('**       NOTAS       **')
+		print('**                   **')
+		print('**    (de 0 a 10)    **')
+		print('**                   **')
+		print('***********************')
+		print()
+
+		print('Digite a sequência de notas separadas por espaço.')
+		sequenciaN = input().strip().split(' ')[:16]
+
+		print()
+		print('\tLimpeza        : ', sequenciaN[0])		
+		print('\tInfraestrutura : ', sequenciaN[1])
+		print('\tInformações    : ', sequenciaN[2])
+		print('\tHorário        : ', sequenciaN[3])
+		print('\tPreço          : ', sequenciaN[4])
+		print('\tCondições      : ', sequenciaN[5])
+		print('\tAtendimento    : ', sequenciaN[6])
+		print('\tOrientações    : ', sequenciaN[7])
+		print('\tTratado        : ', sequenciaN[8])
+		print('\tAgilidade      : ', sequenciaN[9])
+		print('\tQualidade      : ', sequenciaN[10])
+		print('\tPrazo          : ', sequenciaN[11])
+		print('\tBrindes        : ', sequenciaN[12])
+		print('\tSorteio        : ', sequenciaN[13])
+		print('\tAvaliação      : ', sequenciaN[14])
+		print('\tRecomenda      : ', sequenciaN[15])
+		print()
+		print('Confirma?\t(S)im\t(N)ão: ', end='')
+		confirma = input()
+		if confirma == 'n' or confirma == 'N':
+			print()
+			lancaDadosAutoescola()
+
+		print()
+
+		os.system('clear')
+		# caso o usuário lance mais de 16 itens é preciso só pegar os 16 e nada mais.
+
+		# duas listas dentro de uma só:
+		novas_notas = [sequenciaC, sequenciaN, nro_pesquisa, data]
+
+		processa(novas_notas, 'DESPACHANTE')
+
+def lancaDadosAutoescola():
+	print()
+	print('AVALIAÇÃO DE SERVIÇOS DE AUTOESCOLA')
+	print('-----------------------------------')
+	while True:
+		print('Data: ', end='')
+		try:		
+			data = input().strip()
+			data = data.replace('-','/')
+			data = datetime.datetime.strptime(data, '%d/%m/%Y')
+		except:
+			data = data.upper()
+			if data == 'FIM':
+				exit()
+			else:
+				print('Data inválida, Favor redigitar...\n')
+				lancaDadosAutoescola()
+				
+		print()
+		print('Nro da Pesquisa: ', end='')
+		nro_pesquisa = input().strip()
+		print()
+
+		print('**********************')
+		print('**     CARINHAS     **')
+		print('**      0 = :(      **')
+		print('**      1 = :|      **')
+		print('**      2 = :)      **')
+		print('**********************')
+		print()
+
+
+		print('Digite a sequência de valores separados por espaço.')
+		sequenciaC = input().strip().split(' ')[:16]
 		print()
 		print('\tLimpeza        : ', sequenciaC[0])		
 		print('\tInfraestrutura : ', sequenciaC[1])
@@ -215,7 +326,7 @@ def lancaDadosAutoescola():
 		print()
 
 		print('Digite a sequência de notas separadas por espaço.')
-		sequenciaN = input().split(' ')
+		sequenciaN = input().strip().split(' ')[:16]
 
 		print()
 		print('\tLimpeza        : ', sequenciaN[0])		
@@ -243,12 +354,14 @@ def lancaDadosAutoescola():
 
 		print()
 
+		os.system('clear')
+		# caso o usuário lance mais de 16 itens é preciso só pegar os 16 e nada mais.
 
 		# duas listas dentro de uma só:
 		novas_notas = [sequenciaC, sequenciaN, nro_pesquisa, data]
 
 
-		processa(novas_notas)
+		processa(novas_notas, 'AUTOESCOLA')
 
 
 
@@ -256,9 +369,21 @@ def lancaDadosAutoescola():
 if os.path.exists('avaliacao.xlsx'):
 	print('Planilha existe.')
 	print()
-	lancaDadosAutoescola()
 else:
-	print('Arquivos nao existe.')
-	# criar planilha em branco
+	print('Planilha "avaliacao.xlsx" não existe.')
+
+
+print()
+print('Tipo de serviço que será avaliado:')
+print('----------------------------------')
+print('1 - Autoescola.')
+print('2 - Despachante.')
+tipo = input()
+if tipo == '1':
+	lancaDadosAutoescola()
+elif tipo == '2':
+	lancaDadosDespachante()
+else:
+	print('Opção não encontrada.')
 
 
