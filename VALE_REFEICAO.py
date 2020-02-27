@@ -5,6 +5,8 @@
 
 # ESTE SCRIPT É PARA FORMAR UMA PLANILHA DO MÊS REFERENTE AO VALE REFEIÇÃO DOS FUNCIONÁRIOS DE UMA EMPRESA:
 
+#### agergar no rodapé: =CONT.SE(B2:B32; 12)
+
 print()
 # pede nome do mes
 print('DIGITE O NOME DO MÊS: ')
