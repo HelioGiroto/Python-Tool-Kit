@@ -4,9 +4,9 @@
 # Author: Helio Giroto
 # Date: 17/02/2020
 
-# ESTE SCRIPT É PARA FORMAR UMA PLANILHA DO MÊS REFERENTE AO PAGAMENTO DO C.F.C.
+# ESTE SCRIPT É PARA GERAR/APPENDAR PLANILHA EXCEL DO MÊS REFERENTE AO PAGAMENTO DO C.F.C.
 
-from openpyxl import Workbook
+import openpyxl as op
 import datetime, os
 
 def mostraAjuda():
@@ -41,118 +41,48 @@ def mudaNome(nro):
 	return nro
 
 
-listaDados = [['DATA', 'NOME', 'SERVIÇO', 'VALOR']]
-
-def lancaDados():
-	while True:
-		data = 'FIM'
-		print('Data do Serviço* : ', end='')
-		try:		
-			data = input().upper().strip(' ')
-			data = data.replace('-','/')
-			data = datetime.datetime.strptime(data, '%d/%m/%Y')
-		except:
-			if data == 'FIM':
-				salvaPlanilha(listaDados)
-				#data = "FIM"
-				break
-			else:
-				print('\n***Erro na data. Repita digitação...***')
-				# abaixo: por razões desconhecidas, a data sempre herda o valor que estava quando cumpria esta condição (else)...
-				# Por isso, tive que passar FIM como valor para quebrar os laços qdo o usuário quiser finalizar.
-				# qdo o usuário erra na data durante o lançamento este erro permanece como valor de data e ao finalizar, a variável data permanece com este valor do erro.
-				data = 'FIM'
-				lancaDados()
-
-		#print(data)
-		if data == 'FIM':
-			break
-		print('Nome do Aluno....: ', end='')
-		nome = input().upper()
-		nome = nome.strip(' ')
-
-		print('Tipo do Serviço..: ', end='')
-		servico = input()
-		servico = servico.strip(' ')
-		if servico == '0':
-			mostraAjuda()
-			print('Tipo do Serviço..: ', end='')
-			servico = input()
-
-		print('Valor cobrado R$ : ', end='')
-		valor = input()
-		valor = valor.replace(',', '.').replace(' ', '')
-		valor = float(valor)
-
-		nomeTipo = mudaNome(servico)
-
-		# junta dados inseridos numa lista:
-		dadosServico = [data, nome, nomeTipo, valor]
-		print(dadosServico)
-
-		print()
-		print("Confirma ?")
-		print("----------") 
-		print("\t(S)IM \n\t(N)ÃO")
-		confirma = input()
-		#print()
-
-		if confirma == "n" or confirma == "N":
-			#data = "FIM"
-			print('Registro cancelado...')
-			print()		
-			# o problema é qdo chama a mesma função.. (?)
-			#lancaDados()
-		else:
-			print(data)
-			listaDados.append(dadosServico)
-			os.system('clear')
-			# windows:
-			# os.system('cls')
-	print()
-
-
-
-def salvaPlanilha(listaDados):
-	wb = Workbook()
+def salvaPlanilha(dadosServico):
+	# Abre planilha para appendar:
+	wb = op.load_workbook(planilha + '.xlsx')			
 	ws = wb.active
 
-	for item in listaDados:
-		ws.append(item)
+	# appenda a lista digitada pelo usuário:
+	ws.append(dadosServico)
 
-	qtdeServicos = len(listaDados)
-	ws.auto_filter.ref = 'A1:D' + str(qtdeServicos)
-	#ws.auto_filter.add_sort_condition('B2:B' + str(qtdeServicos))
+	# nro da ultima linha da planilha:	
+	ult_linha = ws.max_row
+	ws.auto_filter.ref = 'A1:D' + str(ult_linha)
 
 
-	somaExMed  = '=SUMIF(C2:C'+str(qtdeServicos)+', "EXAME MÉDICO", D2:D'+str(qtdeServicos)+')'
-	somaPsi    = '=SUMIF(C2:C'+str(qtdeServicos)+', "EXAME PSICOTÉCNICO", D2:D'+str(qtdeServicos)+')'
-	somaMedPsi = '=SUMIF(C2:C'+str(qtdeServicos)+', "EXAME MÉDICO/PSICOTÉCNICO", D2:D'+str(qtdeServicos)+')'
-	somaCfc    = '=SUMIF(C2:C'+str(qtdeServicos)+', "CURSO CFC PH", D2:D'+str(qtdeServicos)+')'
-	somaRec    = '=SUMIF(C2:C'+str(qtdeServicos)+', "CURSO RECICLAGEM", D2:D'+str(qtdeServicos)+')'
-	somaRen    = '=SUMIF(C2:C'+str(qtdeServicos)+', "CURSO RENOVAÇÃO", D2:D'+str(qtdeServicos)+')'
-	somaSim    = '=SUMIF(C2:C'+str(qtdeServicos)+', "AULA SIMULADOR", D2:D'+str(qtdeServicos)+')'
-	somaAdm    = '=SUMIF(C2:C'+str(qtdeServicos)+', "ADMISSIONAL", D2:D'+str(qtdeServicos)+')'
-	somaDem    = '=SUMIF(C2:C'+str(qtdeServicos)+', "DEMISSIONAL", D2:D'+str(qtdeServicos)+')'
-	celTotal   = '=SUM(D2:D'+str(qtdeServicos)+')'
+	# celulas laterais com totais de acordo à categoria do serviço:
+	somaExMed  = '=SUMIF(C2:C'+str(ult_linha)+', "EXAME MÉDICO", D2:D'+str(ult_linha)+')'
+	somaPsi    = '=SUMIF(C2:C'+str(ult_linha)+', "EXAME PSICOTÉCNICO", D2:D'+str(ult_linha)+')'
+	somaMedPsi = '=SUMIF(C2:C'+str(ult_linha)+', "EXAME MÉDICO/PSICOTÉCNICO", D2:D'+str(ult_linha)+')'
+	somaCfc    = '=SUMIF(C2:C'+str(ult_linha)+', "CURSO CFC PH", D2:D'+str(ult_linha)+')'
+	somaRec    = '=SUMIF(C2:C'+str(ult_linha)+', "CURSO RECICLAGEM", D2:D'+str(ult_linha)+')'
+	somaRen    = '=SUMIF(C2:C'+str(ult_linha)+', "CURSO RENOVAÇÃO", D2:D'+str(ult_linha)+')'
+	somaSim    = '=SUMIF(C2:C'+str(ult_linha)+', "AULA SIMULADOR", D2:D'+str(ult_linha)+')'
+	somaAdm    = '=SUMIF(C2:C'+str(ult_linha)+', "ADMISSIONAL", D2:D'+str(ult_linha)+')'
+	somaDem    = '=SUMIF(C2:C'+str(ult_linha)+', "DEMISSIONAL", D2:D'+str(ult_linha)+')'
+	celTotal   = '=SUM(D2:D'+str(ult_linha)+')'
 
-	qtdeExMed  = '=COUNTIF(C2:C'+str(qtdeServicos)+', "EXAME MÉDICO")'
-	qtdePsi    = '=COUNTIF(C2:C'+str(qtdeServicos)+', "EXAME PSICOTÉCNICO")'
-	qtdeMedPsi = '=COUNTIF(C2:C'+str(qtdeServicos)+', "EXAME MÉDICO/PSICOTÉCNICO")'
-	qtdeCfc    = '=COUNTIF(C2:C'+str(qtdeServicos)+', "CURSO CFC PH")'
-	qtdeRec    = '=COUNTIF(C2:C'+str(qtdeServicos)+', "CURSO RECICLAGEM")'
-	qtdeRen    = '=COUNTIF(C2:C'+str(qtdeServicos)+', "CURSO RENOVAÇÃO")'
-	qtdeSim    = '=COUNTIF(C2:C'+str(qtdeServicos)+', "AULA SIMULADOR")'
-	qtdeAdm    = '=COUNTIF(C2:C'+str(qtdeServicos)+', "ADMISSIONAL")'
-	qtdeDem    = '=COUNTIF(C2:C'+str(qtdeServicos)+', "DEMISSIONAL")'
+	qtdeExMed  = '=COUNTIF(C2:C'+str(ult_linha)+', "EXAME MÉDICO")'
+	qtdePsi    = '=COUNTIF(C2:C'+str(ult_linha)+', "EXAME PSICOTÉCNICO")'
+	qtdeMedPsi = '=COUNTIF(C2:C'+str(ult_linha)+', "EXAME MÉDICO/PSICOTÉCNICO")'
+	qtdeCfc    = '=COUNTIF(C2:C'+str(ult_linha)+', "CURSO CFC PH")'
+	qtdeRec    = '=COUNTIF(C2:C'+str(ult_linha)+', "CURSO RECICLAGEM")'
+	qtdeRen    = '=COUNTIF(C2:C'+str(ult_linha)+', "CURSO RENOVAÇÃO")'
+	qtdeSim    = '=COUNTIF(C2:C'+str(ult_linha)+', "AULA SIMULADOR")'
+	qtdeAdm    = '=COUNTIF(C2:C'+str(ult_linha)+', "ADMISSIONAL")'
+	qtdeDem    = '=COUNTIF(C2:C'+str(ult_linha)+', "DEMISSIONAL")'
 	qtdeTotal   = '=SUM(H2:H10)'
 
 	# Poderia ser se não tivesse o recurso de sortear as colunas:
 	# ws.cell(row=qtdeServicos+1, column=3).value = 'VALOR TOTAL: '
 	# ws.cell(row=qtdeServicos+1, column=4).value = celTotal
 
-	ws.cell(row=1, column=7) = 'R$'
-	ws.cell(row=1, column=8) = 'Qtde'
+	ws.cell(row=1, column=7).value = 'R$'
+	ws.cell(row=1, column=8).value = 'Qtde'
 
 	ws.cell(row=2, column=6).value = 'Exame Médico: '
 	ws.cell(row=2, column=7).value = somaExMed
@@ -194,15 +124,78 @@ def salvaPlanilha(listaDados):
 	ws.cell(row=12, column=7).value = celTotal
 	ws.cell(row=12, column=8).value = qtdeTotal
 
+
+	# salva:
 	wb.save(planilha + '.xlsx')
 
 	# PARA WINDOWS:
 	# caminho = os.path.join("C:\\", "Users", "user", "Desktop", "python")
 	# wb.save(caminho + '\\' + planilha + ".xlsx")
 
-
+	print('\t\t*** Dados incluidos. ***')
 	print()
-	print('PLANILHA SALVA - ' + planilha + '.xlsx\n')
+
+
+def lancaDados():
+	while True:
+		print()
+		print('Data do Serviço* : ', end='')
+		try:		
+			data = input().upper().strip(' ')
+			data = data.replace('-','/')
+			data = datetime.datetime.strptime(data, '%d/%m/%Y')
+		except:
+			if data == 'FIM':
+				# salvaPlanilha(dadosServico)			# necessario ???	
+				exit()
+			else:
+				print('\n***Erro na data. Repita digitação...***')
+				lancaDados()
+
+
+		print('Nome do Aluno....: ', end='')
+		nome = input().upper()
+		nome = nome.strip(' ')
+
+
+		print('Tipo do Serviço..: ', end='')
+		servico = input()
+		servico = servico.strip(' ')
+		if servico == '0':
+			mostraAjuda()
+			print('Tipo do Serviço..: ', end='')
+			servico = input()
+
+
+		nomeTipo = mudaNome(servico)
+
+		print('Valor cobrado R$ : ', end='')
+		valor = input()
+		valor = valor.replace(',', '.').replace(' ', '')
+		valor = float(valor)
+
+
+		# junta dados inseridos numa lista:
+		dadosServico = [data, nome, nomeTipo, valor]
+		print(dadosServico)
+
+		print()
+		print("Confirma ?")
+		print("----------") 
+		print("\t(S)IM \n\t(N)ÃO ", end='')
+		confirma = input()
+
+		if confirma == "n" or confirma == "N":
+			#data = "FIM"
+			print('Registro cancelado... Redigite por favor:')
+			print()		
+		else:
+			salvaPlanilha(dadosServico)
+			# os.system('clear')
+			# windows:
+			# os.system('cls')
+	# print()
+
 
 
 print()	
@@ -211,23 +204,32 @@ print('** CONTROLE DE CFC **')
 print('*********************')
 print()
 
-print('Nome da Planilha: ')
-planilha = input().lower()
+print('Planilha a ser usada: ')
+planilha = input().lower().strip()
+
+
+# Se a planilha nao existe, cria uma nova:
+if not os.path.exists(planilha + '.xlsx'):
+	print('Esta planilha NÃO existe, deseja criar nova planilha com este nome?')
+	print('(S)im / (N)ão : ', end='')
+	criar = input().strip().lower()[:1]
+	if criar == 'n':
+		exit()
+	else:
+		from openpyxl import Workbook
+		wb = Workbook()
+		ws = wb.active
+		cabecalho = ['DATA', 'NOME', 'SERVIÇO', 'VALOR']
+		ws.append(cabecalho)
+		wb.save(planilha + '.xlsx')
+		print('Nova planilha criada: ' + planilha + '.xlsx')
+		print()
 
 print()
 print('\t(- Digite FIM em "DATA" para terminar -)')
 print('\t(- Digite 0 em "TIPO" para ver opções -)')
 print()
 
-# mostraAjuda()
 
 lancaDados()
-
-#print(listaDados)
-
-# https://openpyxl.readthedocs.io/en/stable/filters.html
-# https://openpyxl.readthedocs.io/en/stable/worksheet_tables.html
-
-# https://banco.bradesco/assets/pessoajuridica/aplicativos/navegador-exclusivo/windows/Instalador.exe
-
 
