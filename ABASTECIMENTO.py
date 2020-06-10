@@ -5,7 +5,7 @@
 # Date: 15/02/2020
 
 # ESTE SCRIPT É PARA FORMAR UMA PLANILHA DO MÊS REFERENTE AO ABASTECIMENTO DE VEÍCULOS DE UMA EMPRESA:
-
+#
 
 print()	
 print('*****************************')
